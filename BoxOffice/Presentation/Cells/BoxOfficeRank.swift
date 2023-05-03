@@ -17,24 +17,31 @@ final class BoxOfficeRank: UIStackView {
     required init(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
+    private let subStackView: UIStackView = {
+        let subStackView = UIStackView()
+        subStackView.axis = .horizontal
+        subStackView.distribution = .fillEqually
+        return subStackView
+    }()
 
     private let rank: UILabel = {
         let rankLabel = UILabel()
         rankLabel.font = .boldSystemFont(ofSize: 20)
         rankLabel.textColor = .black
-
+        rankLabel.sizeToFit()
         return rankLabel
     }()
 
     private lazy var rankEmoji: UIImageView = {
         let rankEmoji = UIImageView()
-
+        rankEmoji.sizeToFit()
         return rankEmoji
     }()
 
     private let rankVariation: UILabel = {
         let rankVariationLabel = UILabel()
-
+        rankVariationLabel.sizeToFit()
         return rankVariationLabel
     }()
 
@@ -43,12 +50,16 @@ final class BoxOfficeRank: UIStackView {
         spacing = 8
         alignment = .center
         distribution = .equalSpacing
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: 100).isActive = true
+        backgroundColor = .green
     }
 
     private func configurationOfComponents() {
         addArrangedSubview(rank)
-        addArrangedSubview(rankEmoji)
-        addArrangedSubview(rankVariation)
+        addArrangedSubview(subStackView)
+        subStackView.addArrangedSubview(rankEmoji)
+        subStackView.addArrangedSubview(rankVariation)
     }
 }
 

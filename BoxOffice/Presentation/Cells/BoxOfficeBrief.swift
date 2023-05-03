@@ -39,6 +39,7 @@ final class BoxOfficeBrief: UIStackView {
         spacing = 8
         alignment = .leading
         distribution = .equalSpacing
+        backgroundColor = .yellow
     }
     
     private func configurationOfComponents() {
