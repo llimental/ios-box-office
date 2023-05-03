@@ -12,18 +12,26 @@ private enum Section: CaseIterable {
 }
 
 class HomeViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "2023-05-01"
+        
         configureOfMainViewLayout()
         makeDataSource()
         performQuery()
     }
     
+    let navigationBar : UINavigationBar = {
+        let navigationBar = UINavigationBar()
+        let navigationItem = UINavigationItem(title: "2023-05-01")
+        navigationBar.setItems([navigationItem], animated: true)
+        
+        return navigationBar
+    }()
+    
     //MARK: - Private Property
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: self.view.frame,
+        let collectionView = UICollectionView(frame: self.view.bounds,
                                               collectionViewLayout: configureOfCollectionViewLayout())
         collectionView.isScrollEnabled = true
         collectionView.showsVerticalScrollIndicator = true
@@ -38,26 +46,34 @@ class HomeViewController: UIViewController {
     private func configureOfMainViewLayout() {
         let safeArea = self.view.safeAreaLayoutGuide
         
-        self.view.backgroundColor = .systemGray2
+        self.view.addSubview(navigationBar)
+        navigationBar.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            navigationBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            navigationBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+        ])
+        
         self.view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: navigationBar.layoutMarginsGuide.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])
     }
     
     private func configureOfCollectionViewLayout() -> UICollectionViewLayout {
-        let layoutConfig = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        let layoutConfig = UICollectionLayoutListConfiguration(appearance: .plain)
         return UICollectionViewCompositionalLayout.list(using: layoutConfig)
     }
     
     //MARK: - Cell Register of DiffableDataSource
     private func makeDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<BoxOfficeListCell, DailyBoxOffice> { (cell, indexPath, dailyBoxOffice) in
-//            cell.setupAllUIComponents()
+            cell.dailyBoxOffice = dailyBoxOffice
+            cell.accessories = [.disclosureIndicator()]
         }
         
         self.dataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOffice>(collectionView: self.collectionView) { (collectionView, indexPath, dailyBoxOffice) in
@@ -73,9 +89,14 @@ class HomeViewController: UIViewController {
             DailyBoxOffice(rankEmoji: UIImage(systemName: "arrowtriangle.up.fill")!,
                            movieBrief: MovieBrief(movieName: "스즈메", audienceCount: "이건 snapshot 내용이다."),
                            rank: Rank(rank: "100", movieType: "40")),
+            
             DailyBoxOffice(rankEmoji: UIImage(systemName: "arrowtriangle.up.fill")!,
                            movieBrief: MovieBrief(movieName: "야사시", audienceCount: "스키"),
-                           rank: Rank(rank: "101", movieType: "50"))
+                           rank: Rank(rank: "101", movieType: "50")),
+            
+            DailyBoxOffice(rankEmoji: UIImage(systemName: "arrowtriangle.up.fill")!,
+                           movieBrief: MovieBrief(movieName: "아리가또", audienceCount: "스즈메짱"),
+                           rank: Rank(rank: "102", movieType: "60"))
         ]
         var snapshot = NSDiffableDataSourceSnapshot<Section, DailyBoxOffice>()
         

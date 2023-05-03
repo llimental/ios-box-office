@@ -10,6 +10,8 @@ import UIKit
 final class BoxOfficeRank: UIStackView {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        configuration()
+        configurationOfComponents()
     }
 
     required init(coder: NSCoder) {
@@ -18,7 +20,7 @@ final class BoxOfficeRank: UIStackView {
 
     private let rank: UILabel = {
         let rankLabel = UILabel()
-        rankLabel.font = .boldSystemFont(ofSize: 35)
+        rankLabel.font = .boldSystemFont(ofSize: 20)
         rankLabel.textColor = .black
 
         return rankLabel
@@ -51,7 +53,10 @@ final class BoxOfficeRank: UIStackView {
 }
 
 extension BoxOfficeRank {
-
+    func setRank(by text: String) {
+        rank.text = text
+    }
+    
     func setRankVariation(by text: String) {
         rankVariation.text = text
     }
