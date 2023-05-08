@@ -18,7 +18,6 @@ class HomeViewController: UIViewController {
         
         configureOfMainViewLayout()
         makeDataSource()
-        performQuery()
     }
     
     let navigationBar : UINavigationBar = {
@@ -81,10 +80,13 @@ class HomeViewController: UIViewController {
                                                                 for: indexPath,
                                                                 item: dailyBoxOffice)
         }
+        
+        let snapshot = initialSnapshot()
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     //MARK: - Snapshot
-    private func performQuery() {
+    private func initialSnapshot() -> NSDiffableDataSourceSnapshot<Section, DailyBoxOffice> {
         let test = [
             DailyBoxOffice(rankEmoji: UIImage(systemName: "arrowtriangle.up.fill")!,
                            movieBrief: MovieBrief(movieName: "스즈메", audienceCount: "이건 snapshot 내용이다."),
@@ -102,6 +104,6 @@ class HomeViewController: UIViewController {
         
         snapshot.appendSections([.main])
         snapshot.appendItems(test, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        return snapshot
     }
 }
